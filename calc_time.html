@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <ul>
+    <li><p class="date_val">2022-11-24 14:58:58</p> <span class="update_time"></span></li>
+    <li><p class="date_val">2022-11-23 10:39:00</p> <span class="update_time"></span></li>
+    <li><p class="date_val">2022-11-20 11:39:00</p> <span class="update_time"></span></li>
+    <li><p class="date_val">2022-11-25 9:04:00</p> <span class="update_time"></span></li>
+  </ul>
+  <script>
+
+
+    //기준시간 여러개 받아오기
+    let date_value = document.querySelectorAll('.date_val');
+    let update_time = document.querySelectorAll('.update_time');
+    //현재시간을 받아오는 함수
+    function clock(){
+      let now = new Date();
+      let now_arr = [now.getFullYear(),now.getMonth()+1, now.getDate(),now.getHours(), now.getMinutes(), now.getSeconds()];
+      
+      return now_arr;
+    };
+
+    //한자리수일때 0 붙여서 두자리수로 만드는 함수
+    function add_zero(n){
+      return (n < 10 ? '0' : '') + n
+    }
+    
+    
+    function calc_time(){
+      let now = clock();
+      //기준시간 정리
+      for(let i = 0; i<date_value.length;i++){
+        let dateNtime = date_value[i].innerText.split(" ");
+        let date_spl =  dateNtime[0].split("-");
+        let time_spl =  dateNtime[1].split(":");
+        let id_date = date_spl.concat(time_spl);
+
+        //new Date로 초단위로 바꾼 후 뺼셈
+        let date1 = new Date(now[0],now[1],now[2],now[3],now[4],now[5]);
+        let date2 = new Date(id_date[0],id_date[1],id_date[2],id_date[3],id_date[4],id_date[5]);
+        let milliSec = date1.getTime() - date2.getTime(); //밀리세컨드 뺄셈
+        let get_sec = milliSec / 1000; //밀리세컨드를 1000으로 나누어서 초단위로 변경
+        
+        //일 구하고
+        let day = parseInt(get_sec / 60 / 60 / 24);
+
+        //나머지 저장하고
+        let nmg = get_sec - (day*60*60*24);
+
+        //시간 구하고
+        let get_hour = parseInt(nmg / 60 / 60);
+        
+        //나머지저장하고
+        nmg = nmg  - (get_hour*60*60);
+        
+        //나머지에서 분구하고
+        let get_min = parseInt(nmg / 60); 
+
+        //나머지 저장하고
+        nmg = nmg - (get_min*60);
+        //나머지가 초
+
+
+        
+        
+        update_time[i].innerText = `${day}일 ${get_hour} : ${get_min} : ${nmg} 지남`
+      }
+
+    }
+    setInterval(calc_time,1000);
+
+    
+  </script>
+</body>
+</html>
